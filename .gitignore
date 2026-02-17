@@ -50,6 +50,8 @@ output/
 checkpoints/
 results/
 wandb/
+model_zoo/clip_context/
+model_zoo/video_mae/
 
 # OS
 .DS_Store

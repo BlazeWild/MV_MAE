@@ -1,0 +1,4 @@
+clip_context vit_tiny_patch16_224.pth https://huggingface.co/timm/vit_tiny_patch16_224.augreg_in21k_ft_in1k/resolve/main/pytorch_model.bin
+clip_context config.json https://huggingface.co/timm/vit_tiny_patch16_224.augreg_in21k_ft_in1k/resolve/main/config.json
+video_mae vit_s_k400_ft.pth https://huggingface.co/MCG-NJU/videomae-small-finetuned-kinetics/resolve/main/pytorch_model.bin
+video_mae config.json https://huggingface.co/MCG-NJU/videomae-small-finetuned-kinetics/resolve/main/config.json
