@@ -43,7 +43,7 @@ venv.bak/
 *.pt
 *.onnx
 data/
-datasets/
+# datasets
 logs/
 runs/
 output/
