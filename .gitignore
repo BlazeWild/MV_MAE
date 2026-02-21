@@ -42,7 +42,6 @@ venv.bak/
 *.pth
 *.pt
 *.onnx
-data/
 datasets/UAVHuman_240p_mp4/
 datasets/UAVHuman/
 logs/

@@ -19,11 +19,10 @@ class ClassificationHead(nn.Module):
         return self.mlp(x)
 
 class MVMAE(nn.Module):
-    """
-    MV-MAE Complete Hierarchical Architectire"""
-    def __init__(self, num_classes=155, model_zoo_path="./model_zoo",num_temporal_layers=2, n_head=8, dim_ctx=192, dim_mot=384, max_gops=16):
+    """MV-MAE Complete Hierarchical Architecture"""
+    def __init__(self, num_classes=155, model_zoo_path="./model_zoo", num_temporal_layers=2, n_head=8, dim_ctx=192, dim_mot=384, max_gops=16):
         super().__init__()
-        # spatial and motion backbones
+        # Spatial and motion backbones
         self.ctx_encoder = ContextEncoder(model_zoo_path)
         self.mot_encoder = MotionEncoder(model_zoo_path)
         
@@ -42,32 +41,34 @@ class MVMAE(nn.Module):
 
         # Classification Head
         self.head = ClassificationHead(
-            input_dim = self.fused_dim,
-            num_classes = num_classes
+            input_dim=self.fused_dim,
+            num_classes=num_classes
         )
 
-    def forward(Self, iframes, mvs):
-        B,N,C,H,W = iframes.shape
-        _, _, C_m, T_m , H_m, W_m = mvs.shape
+    def forward(self, iframes, mvs): # FIXED: Lowercase 'self'
+        # iframes: [B, N, C, H, W]
+        # mvs:     [B, N, C_m, T_m, H_m, W_m]
+        B, N, C, H, W = iframes.shape
+        _, _, C_m, T_m, H_m, W_m = mvs.shape
 
-        # flatten 
-        iframes_flat = iframes.view(B*N, C, H, W)
-        mvs_flat = mvs.view(B*N, C_m, T_m, H_m, W_m)
+        # 1. Flatten the Batch and Sequence dimensions together for the independent encoders
+        iframes_flat = iframes.view(B * N, C, H, W)
+        mvs_flat = mvs.view(B * N, C_m, T_m, H_m, W_m)
 
-        # encode
-        ctx_feat = self.ctx_encoder(iframes_flat)
-        mot_feat = self.mot_encoder(mvs_flat)
+        # 2. Extract features
+        ctx_feat = self.ctx_encoder(iframes_flat) # Output: [B*N, 192]
+        mot_feat = self.mot_encoder(mvs_flat)     # Output: [B*N, 384]
 
-        # concatenate features
-        fused_feat = torch.cat([ctx_feat, mot_feat], dim=1)
+        # 3. Concatenate Spatial (Context) and Temporal (Motion) features
+        fused_feat = torch.cat([ctx_feat, mot_feat], dim=1) # Output: [B*N, 576]
         
-        # reshape back to temporal sequence
-        sequence_feat = fused_feat.view(B,N, self.fused_dim)
+        # 4. Reshape back to chronological temporal sequence for the Transformer
+        sequence_feat = fused_feat.view(B, N, self.fused_dim) # Output: [B, N, 576]
 
-        # temporal transformer
-        video_feat = self.temporal_transformer(sequence_feat)
+        # 5. Process through Temporal Transformer to get global video context
+        video_feat = self.temporal_transformer(sequence_feat) # Output: [B, 576]
 
-        # classification
-        logits = self.head(video_feat)
+        # 6. Final Classification
+        logits = self.head(video_feat) # Output: [B, 155]
 
         return logits
