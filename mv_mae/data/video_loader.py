@@ -70,16 +70,16 @@ class VideoLoader:
         
         # 1. Decode video and group frames into chronological chunks anchored by I-Frames
         for frame in container.decode(stream):
-            pict_type = frame.pict_type.name
+            is_iframe = frame.key_frame
             
-            if pict_type == 'I':
+            if is_iframe:
                 if current_gop_frames:
                     all_gops.append(current_gop_frames)
                 current_gop_frames = [] # Start a new GOP
                 
             mvs = frame.side_data.get('MOTION_VECTORS', [])
             mv_data = self.rasterize_mvs(mvs, self.height, self.width)
-            img_data = frame.to_ndarray(format='rgb24') if pict_type == 'I' else None
+            img_data = frame.to_ndarray(format='rgb24') if is_iframe else None
             
             current_gop_frames.append({'image': img_data, 'motion': mv_data})
             

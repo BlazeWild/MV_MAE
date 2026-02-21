@@ -1,7 +1,7 @@
 
 
 from .optimizer import get_optimizer
-from .logging_ import setup_logger
+from .logger import setup_logger
 from .checkpoint import get_latest_checkpoint, save_checkpoint, load_checkpoint
 
 __all__ = [
