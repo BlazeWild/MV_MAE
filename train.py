@@ -6,9 +6,9 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from torch.amp import autocast, GradScaler
 
-from data.dataset import UAVHumanDataset
-from models import MVMAE
-from utils import setup_logger, get_latest_checkpoint, save_checkpoint, load_checkpoint
+from mv_mae.data.dataset import UAVHumanDataset
+from mv_mae.models import MVMAE
+from mv_mae.utils import setup_logger, get_latest_checkpoint, save_checkpoint, load_checkpoint
 
 # ==============================================================================
 # MASTER CONFIGURATION
