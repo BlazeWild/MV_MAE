@@ -43,7 +43,8 @@ venv.bak/
 *.pt
 *.onnx
 data/
-# datasets
+datasets/UAVHuman_240p_mp4/
+datasets/UAVHuman/
 logs/
 runs/
 output/

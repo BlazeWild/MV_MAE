@@ -1,0 +1,6 @@
+torch
+timm
+transformers
+torchinfo
+gdown
+tqdm
