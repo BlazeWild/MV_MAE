@@ -75,6 +75,7 @@ def resize_video(vid_path):
             '-threads', '2',        
             '-filter_threads', '2', 
             '-c:v', 'h264_nvenc',
+            '-g', '16', '-keyint_min', '16',
             '-preset', 'p1',    
             '-rc', 'vbr',
             '-cq', '23',        

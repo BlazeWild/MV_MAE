@@ -42,7 +42,7 @@ venv.bak/
 *.pth
 *.pt
 *.onnx
-datasets/UAVHuman_240p_mp4/
+datasets/UAVHuman_480p_mp4/
 datasets/UAVHuman/
 logs/
 runs/
@@ -52,6 +52,7 @@ results/
 wandb/
 model_zoo/clip_context/
 model_zoo/video_mae/
+tests/*.mp4
 
 # OS
 .DS_Store

@@ -43,7 +43,6 @@ class AlignedSpatialCrop:
         mvs_cropped = mvs[:, :, :, mv_y:mv_y+self.mv_crop_size, mv_x:mv_x+self.mv_crop_size]
         
         # 3. Upsample MVs back to 224x224 using Nearest Neighbor
-        # This prevents the patch_embed error while keeping macroblock data perfectly intact.
         N, C_m, T_m, h, w = mvs_cropped.shape
         mvs_flat = mvs_cropped.view(N, C_m * T_m, h, w)
         mvs_up = F.interpolate(mvs_flat, scale_factor=16, mode='nearest')
@@ -51,30 +50,20 @@ class AlignedSpatialCrop:
         
         # 4. Pad a 3rd channel (Zeros) to match RGB pre-training shape
         zeros = torch.zeros((N, 1, T_m, self.crop_size, self.crop_size), dtype=mvs_up.dtype, device=mvs_up.device)
-        mvs_3ch = torch.cat([mvs_up, zeros], dim=1) # Output: [N, 3, 16, 224, 224]
+        mvs_3ch = torch.cat([mvs_up, zeros], dim=1) 
         
         return iframes_cropped, mvs_3ch
 
 
 class UAVHumanDataset(Dataset):
     def __init__(self, data_root, split_file, num_segments=8, gop_size=16, is_train=True):
-        """
-        Args:
-            data_root (str): Path to the folder containing the optimized .mp4 videos.
-            split_file (str): Path to the generated train_split.txt or val_split.txt.
-            num_segments (int): Number of temporal GOPs to sample (N).
-            gop_size (int): Fixed frame size per GOP (hardware aligned to 16).
-            is_train (bool): Toggles random cropping vs center cropping.
-        """
         self.data_root = data_root
         self.split_file = split_file
         self.num_segments = num_segments
         self.gop_size = gop_size
         
-        # Initialize the mathematically aligned cropper
         self.cropper = AlignedSpatialCrop(crop_size=224, is_train=is_train)
         
-        # Standard ImageNet normalization values expected by ViT
         self.mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
         self.std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
 
@@ -85,8 +74,6 @@ class UAVHumanDataset(Dataset):
         if not os.path.exists(self.split_file):
             raise FileNotFoundError(f"Split file not found: {self.split_file}")
             
-        logger.info(f"Loading dataset split from {self.split_file}...")
-        
         with open(self.split_file, 'r') as f:
             for line in f:
                 parts = line.strip().split()
@@ -108,18 +95,15 @@ class UAVHumanDataset(Dataset):
             iframes, mvs = loader.get_video_clip(num_segments=self.num_segments)
             
             if iframes is None or mvs is None:
-                raise ValueError("VideoLoader returned None (corrupt or unreadable file).")
+                raise ValueError("VideoLoader returned None (stream unreadable).")
 
-            # 1. Apply Aligned Cropping and Reshaping
             iframes, mvs = self.cropper(iframes, mvs)
-
-            # 2. Normalize I-frames
             iframes = (iframes - self.mean) / self.std
 
             label_tensor = torch.tensor(label, dtype=torch.long)
             return iframes, mvs, label_tensor
 
         except Exception as e:
-            logger.warning(f"Error loading {vid_path}: {e}. Falling back to random sample.")
+            logger.warning(f"Error loading {vid_path}: {e}. Trying random sample.")
             random_idx = random.randint(0, len(self.samples) - 1)
             return self.__getitem__(random_idx)
