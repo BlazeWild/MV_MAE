@@ -35,7 +35,7 @@ class ContextEncoder(nn.Module):
 class MotionEncoder(nn.Module):
     """
     Encodes the Motion Vectors using VideoMAE-Small.
-    Input -> [B, 2, 16, H, W]
+    Input -> [B, 3, 16, 224, 224]
     Output -> [B, 384] (the mean pool features)
     """
     def __init__(self, model_zoo_path: str = "./model_zoo"):
@@ -47,21 +47,27 @@ class MotionEncoder(nn.Module):
         if not os.path.exists(weights_path):
             raise FileNotFoundError(f"VideoMAE weights not found at {weights_path}")
 
+        import logging
+        logger = logging.getLogger(__name__)
         logger.info("Loading VideoMAE Motion Encoder")
         
-        # FIX: Load config from the directory containing config.json, not the .pth file
+        from transformers import VideoMAEConfig, VideoMAEModel
         config = VideoMAEConfig.from_pretrained(model_dir)
         self.videomae = VideoMAEModel(config)
 
-        # Load weights manually
         state_dict = torch.load(weights_path, map_location='cpu')
         if 'model' in state_dict:
             state_dict = state_dict['model']
         self.videomae.load_state_dict(state_dict, strict=False)
 
     def forward(self, mvs):
-        # [B, 2, 16, H, W] -> [B, 16, 2, H, W] for VideoMAE
+        # ---------------------------------------------------------
+        # THE FIX: Swap Channels (dim 1) and Time (dim 2)
+        # [B, 3, 16, 224, 224] -> [B, 16, 3, 224, 224]
+        # This perfectly satisfies Hugging Face's custom API.
+        # ---------------------------------------------------------
         x = mvs.permute(0, 2, 1, 3, 4) 
+        
         outputs = self.videomae(x)
         
         # Last hidden state: [Batch, Sequence_Length, Hidden_Dim]
