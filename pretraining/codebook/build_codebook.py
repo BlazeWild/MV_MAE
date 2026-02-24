@@ -1,10 +1,15 @@
 import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+
 import torch
 import numpy as np
 import faiss
 import logging
 from tqdm import tqdm
-from mv_mae.data.dataset import UAVHumanDataset
+from pretraining.data.dataset import UAVHumanDataset
+
+from torch.utils.data import DataLoader, Subset
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -12,9 +17,10 @@ logger = logging.getLogger(__name__)
 class CodebookConfig:
     """Master configuration for codebook generation."""
     def __init__(self):
-        self.data_root = 'datasets/UAVHuman_240p_mp4/Action_Videos'
-        self.train_split = 'datasets/UAVHuman_240p_mp4/train_split.txt'
-        self.save_path = './checkpoints/mv_codebook_1024.pt'
+        base_dir = os.path.dirname(__file__)
+        self.data_root = os.path.abspath(os.path.join(base_dir, '../../datasets/UAVHuman_480p_mp4/Action_Videos'))
+        self.train_split = os.path.abspath(os.path.join(base_dir, '../../datasets/UAVHuman_480p_mp4/train_split.txt'))
+        self.save_path = os.path.abspath(os.path.join(base_dir, '../../checkpoints/mv_codebook_1024.pt'))
         
         self.vocab_size = 1024
         self.gop_size = 16
@@ -27,7 +33,7 @@ class CodebookConfig:
 
 
 class MotionVectorExtractor:
-    """Handles loading videos and extracting active, non-zero motion vectors."""
+    """Handles loading videos and extracting active, non-zero motion vectors using Multiprocessing."""
     def __init__(self, config):
         self.config = config
         self.dataset = self._initialize_dataset()
@@ -44,24 +50,41 @@ class MotionVectorExtractor:
 
     def extract_active_vectors(self):
         """Extracts and filters vectors, returning a dense numpy array of active motion."""
+        # Grab random indices for the subset
         indices = torch.randperm(len(self.dataset)).tolist()[:self.config.max_videos_to_scan]
+        subset = Subset(self.dataset, indices)
+        
+        # THE FIX: Use PyTorch DataLoader for multiprocessing!
+        # Batch size 8 + 10 workers means it processes chunks of videos in parallel across your vCPUs
+        loader = DataLoader(
+            subset, 
+            batch_size=8, 
+            shuffle=False, 
+            num_workers=10,  # Leaving 2 vCPUs free for the main thread and OS
+            pin_memory=False,
+            drop_last=False
+        )
         
         # Pre-allocate memory to prevent RAM fragmentation
         massive_pool = np.zeros((self.config.max_vectors_to_keep, 2), dtype=np.float32)
         current_count = 0
         
-        logger.info(f"Scanning up to {len(indices)} videos for active motion vectors...")
+        logger.info(f"Scanning up to {len(indices)} videos using 10 CPU workers...")
         
-        for idx in tqdm(indices, desc="Extracting MVs"):
+        # Iterate over the parallelized dataloader
+        for iframes, mvs, _ in tqdm(loader, desc="Extracting Batched MVs"):
             if current_count >= self.config.max_vectors_to_keep:
-                logger.info("Reached maximum vector capacity. Halting extraction.")
                 break
                 
             try:
-                _, mvs, _ = self.dataset[idx]
+                # mvs shape from dataloader: [Batch, Segments, Channels, Time, H, W]
+                # Example: [8, 8, 2, 16, 14, 14]
                 
-                # Reshape from [8, 2, 16, 14, 14] -> [25088, 2]
-                mvs = mvs.permute(0, 2, 3, 4, 1) 
+                # Rearrange to put the 2 channels at the very end
+                # Permute: (Batch, Segments, Time, H, W, Channels)
+                mvs = mvs.permute(0, 1, 3, 4, 5, 2) 
+                
+                # Flatten everything except the 2 channels
                 mvs_flat = mvs.reshape(-1, 2)    
                 
                 # Sparsity Filtering: Keep only vectors with actual movement
@@ -80,30 +103,30 @@ class MotionVectorExtractor:
                 current_count += take
                 
             except Exception as e:
-                # Silently skip corrupted videos
+                logger.warning(f"Batch processing error: {e}")
                 continue
                 
-        # Return only the populated slice of the array
         logger.info(f"Successfully extracted {current_count:,} active motion vectors.")
         return massive_pool[:current_count]
 
-
 class FaissClusterer:
-    """Wraps the GPU-accelerated FAISS K-Means algorithm."""
+    """Wraps the FAISS K-Means algorithm."""
     def __init__(self, vocab_size):
         self.vocab_size = vocab_size
         self.d = 2 # Vector dimension (dx, dy)
 
     def train(self, data):
         """Trains the K-Means algorithm and returns the centroids as a PyTorch tensor."""
-        logger.info(f"Launching FAISS K-Means (K={self.vocab_size}) on GPU...")
+        logger.info(f"Launching FAISS K-Means (K={self.vocab_size}) on CPU (Bypassing cuBLAS bug)...")
         
+        # THE FIX: Set gpu=False. 
+        # FAISS will automatically use all your CPU threads via OpenMP.
         kmeans = faiss.Kmeans(
             d=self.d, 
             k=self.vocab_size, 
             niter=30,  
             verbose=True, 
-            gpu=True   
+            gpu=False   # <--- FIX IS HERE
         )
         
         kmeans.train(data)
