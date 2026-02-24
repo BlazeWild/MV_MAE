@@ -38,9 +38,9 @@ venv.bak/
 *.swo
 
 # ML / Data
-*.ckpt
+# *.ckpt
 *.pth
-*.pt
+# *.pt
 *.onnx
 datasets/UAVHuman_480p_mp4/
 datasets/UAVHuman/
