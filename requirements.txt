@@ -5,3 +5,4 @@ torchinfo
 gdown
 tqdm
 av
+fiass-gpu
