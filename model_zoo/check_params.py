@@ -1,62 +1,53 @@
 import torch
+import sys
 import os
-from pathlib import Path
+from torchinfo import summary
 
-def get_params_from_checkpoint(ckpt_path):
+# Ensure mv_mae is reachable to load the encoders
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+try:
+    from mv_mae.models.encoders import ContextEncoder, MotionEncoder
+    MODELS_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Could not import Encoders. Error: {e}")
+    MODELS_AVAILABLE = False
+
+def print_model_summaries():
     """
-    Loads a checkpoint file (.bin or .pth) and calculates the number of parameters
-    directly from the state_dict, without instantiating the model class.
+    Prints the torchinfo hierarchical summary for the ContextEncoder and MotionEncoder.
     """
-    try:
-        # Load state dict
-        # map_location='cpu' ensures we don't need a GPU
-        state_dict = torch.load(ckpt_path, map_location='cpu')
-        
-        # Handle cases where state_dict is nested (e.g., {'model': ...})
-        if 'model' in state_dict:
-            state_dict = state_dict['model']
-        elif 'state_dict' in state_dict:
-            state_dict = state_dict['state_dict']
-            
-        total_params = 0
-        trainable_params = 0 # Cannot strictly determine without model, assuming all in state_dict are params
-        
-        print(f"\nAnalyzing: {os.path.basename(ckpt_path)}")
-        print("-" * 40)
-        
-        for name, param in state_dict.items():
-            # Skip non-parameter entries if any (like batch norm stats sometimes saved distinctly, 
-            # though usually they are tensors in state_dict)
-            if isinstance(param, torch.Tensor):
-                num_params = param.numel()
-                total_params += num_params
-                # print(f"{name}: {num_params}") # Uncomment for detailed layer-wise count
-
-        # Convert to Millions
-        params_m = total_params / 1e6
-        
-        print(f"Total Parameters: {total_params:,} ({params_m:.2f} M)")
-        return total_params
-
-    except Exception as e:
-        print(f"Error loading {ckpt_path}: {e}")
-        return 0
-
-def main():
-    # Base directory for model zoo
-    base_dir = Path(__file__).parent
-    
-    # Find all .bin or .pth files in subdirectories
-    model_files = list(base_dir.rglob("*.bin")) + list(base_dir.rglob("*.pth"))
-    
-    if not model_files:
-        print(f"No .bin or .pth files found in {base_dir}")
+    if not MODELS_AVAILABLE:
+        print("\nCould not load Encoders for torchinfo summary.")
         return
 
-    print(f"Found {len(model_files)} model files.")
-    
-    for model_file in model_files:
-         get_params_from_checkpoint(model_file)
+    base_dir = os.path.dirname(__file__)
+
+    # 1. Context Encoder (ViT-Tiny)
+    print("\n" + "="*80)
+    print("ContextEncoder (ViT-Tiny) Summary")
+    print("="*80)
+    try:
+        context_encoder = ContextEncoder(model_zoo_path=base_dir)
+        iframe = torch.randn(1, 3, 224, 224)
+        summary(context_encoder, input_data=[iframe], 
+                col_names=("input_size", "output_size", "num_params", "kernel_size", "mult_adds"),
+                depth=4, verbose=1)
+    except Exception as e:
+        print(f"Failed to load/summarize ContextEncoder: {e}")
+
+    # 2. Motion Encoder (VideoMAE-Small)
+    print("\n" + "="*80)
+    print("MotionEncoder (VideoMAE-Small) Summary")
+    print("="*80)
+    try:
+        motion_encoder = MotionEncoder(model_zoo_path=base_dir)
+        mvs = torch.randn(1, 3, 16, 224, 224)
+        summary(motion_encoder, input_data=[mvs], 
+                col_names=("input_size", "output_size", "num_params", "kernel_size", "mult_adds"),
+                depth=4, verbose=1)
+    except Exception as e:
+        print(f"Failed to load/summarize MotionEncoder: {e}")
 
 if __name__ == "__main__":
-    main()
+    print_model_summaries()

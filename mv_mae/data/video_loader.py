@@ -43,6 +43,7 @@ class VideoLoader:
         return motion_field
 
     def get_video_clip(self, num_segments=8):
+        container = None
         try:
             container = av.open(self.video_path, options={'export_mvs': 'true'})
             stream = container.streams.video[0]
@@ -93,8 +94,6 @@ class VideoLoader:
                     
                 frame_buffer.append({'image': img_data, 'motion': mv_data})
                 frame_idx += 1
-                
-            container.close()
 
             # The Slicer: Build the final tensors
             iframe_tensors = []
@@ -120,6 +119,9 @@ class VideoLoader:
         except Exception as e:
             logger.error(f"Failed to process {self.video_path}: {e}")
             return None, None
+        finally:
+            if container is not None:
+                container.close()
 
     def _pack_and_pad_chunk(self, chunk):
         actual_len = len(chunk)

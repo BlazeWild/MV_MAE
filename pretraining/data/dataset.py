@@ -84,7 +84,10 @@ class UAVHumanDataset(Dataset):
     def __len__(self):
         return len(self.samples)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx, retries=0):
+        if retries > 10:
+            raise RuntimeError("Too many corrupted files in sequence, DataLoader aborting.")
+
         vid_path, label = self.samples[idx]
         
         try:
@@ -103,4 +106,4 @@ class UAVHumanDataset(Dataset):
         except Exception as e:
             logger.warning(f"Error loading {vid_path}: {e}. Trying random sample.")
             random_idx = random.randint(0, len(self.samples) - 1)
-            return self.__getitem__(random_idx)
+            return self.__getitem__(random_idx, retries=retries+1)
