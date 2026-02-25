@@ -1,3 +1,4 @@
+# pretrain.py
 import os
 import sys
 
@@ -28,10 +29,12 @@ from pretraining.models.tokenizer import MVCodebookTokenizer  # IMPORTING YOUR R
 # ==============================================================================
 class Config:
     # --- Paths ---
-    data_root = '../datasets/UAVHuman_480p_mp4/Action_Videos'
-    train_split = '../datasets/UAVHuman_480p_mp4/train_split.txt'
-    checkpoint_dir = 'checkpoints_pretrain'
-    codebook_path = 'codebook_ckpt/mv_codebook_1024.pt'
+    _base_dir = os.path.dirname(os.path.abspath(__file__))
+    _root_dir = os.path.dirname(_base_dir)
+    data_root = os.path.join(_root_dir, 'datasets', 'UAVHuman_480p_mp4', 'Action_Videos')
+    train_split = os.path.join(_root_dir, 'datasets', 'UAVHuman_480p_mp4', 'train_split.txt')
+    checkpoint_dir = os.path.join(_base_dir, 'checkpoints_pretrain')
+    codebook_path = os.path.join(_base_dir, 'codebook_ckpt', 'mv_codebook_1024.pt')
     
     # --- Dataset & Architecture ---
     num_segments = 8
@@ -48,10 +51,10 @@ class Config:
     resume = True
     
     # --- Hardware & Cloud Optimization ---
-    batch_size = 8
-    accumulation_steps = 4  # Effective batch size = 32
-    num_workers = 8
-    prefetch_factor = 3
+    batch_size = 4
+    accumulation_steps = 8  # Effective batch size = 32
+    num_workers = 10
+    prefetch_factor = 4
 
 args = Config()
 
@@ -112,7 +115,8 @@ def main():
         split_file=args.train_split, 
         num_segments=args.num_segments, 
         gop_size=args.gop_size,
-        is_train=True
+        is_train=True,
+        extract_rgb = False
     )
 
     train_loader = DataLoader(
@@ -124,7 +128,7 @@ def main():
         prefetch_factor=args.prefetch_factor,
         persistent_workers=True,
         drop_last=True,
-        timeout=10  # Stop workers from deadlocking on bad videos
+        timeout=120  # Stop workers from deadlocking on bad videos (increased from 10s to 120s for slow videos)
     )
 
     logger.info("Initializing Discrete MVMAE...")

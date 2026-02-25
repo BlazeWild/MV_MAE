@@ -1,3 +1,4 @@
+#encoder.py
 import torch
 import torch.nn as nn
 from timm.models.layers import trunc_normal_
@@ -46,7 +47,7 @@ class MVMAEEncoder(nn.Module):
         ])
         self.norm = nn.LayerNorm(embed_dim)
 
-    def random_masking(Self, x, mask_ratio):
+    def random_masking(self, x, mask_ratio):
         B,N,L = x.shape
         len_keep = int(N*(1-mask_ratio))
 
@@ -57,13 +58,14 @@ class MVMAEEncoder(nn.Module):
         ids_keep = ids_shuffle[:, :len_keep]
         x_masked = torch.gather(x, dim=1, index=ids_keep.unsqueeze(-1).repeat(1,1,L))
         
-        mask = torch.ones([B,N], device=x.device)
+        # Force the mask to inherit the exact dtype (bfloat16/float32) of the input tensor
+        mask = torch.ones([B,N], device=x.device, dtype=x.dtype, requires_grad=False)
         mask[:, :len_keep] = 0
         mask = torch.gather(mask, dim=1, index=ids_restore)
 
         return x_masked, mask, ids_restore
 
-    def forward(Self, x, mask_ratio=0.9):
+    def forward(self, x, mask_ratio=0.9):
         # flatten batch and sequence if 6D
         if x.dim() == 6:
             B,S,C,T,H,W = x.shape

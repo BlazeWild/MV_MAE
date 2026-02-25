@@ -10,56 +10,44 @@ from .video_loader import VideoLoader
 logger = logging.getLogger(__name__)
 
 class UAVDataTransform:
-    """
-    Ensures I-frames are 224x224 and handles the complex reshaping required 
-    to feed Motion Vectors into a pre-trained VideoMAE model.
-    """
-    def __init__(self, crop_size=224, is_train=True):
+    def __init__(self, crop_size=224, is_train=True, extract_rgb=True):
         self.crop_size = crop_size
         self.mv_crop_size = crop_size // 16  # 224/16 = 14
         self.is_train = is_train
+        self.extract_rgb = extract_rgb # The switch
 
     def __call__(self, iframes, mvs):
-        # iframes: [N, 3, H, W]
-        # mvs : [N, 2, 16, H_grid, W_grid]
-        
-        N, C_i, H_i, W_i = iframes.shape
         N, C_m, T_m, H_grid, W_grid = mvs.shape    
 
-        # 1. I-frame Processing: Resize to 224x224
-        iframes_resized = F.interpolate(iframes, size=(self.crop_size, self.crop_size), mode='bilinear', align_corners=False)
+        # 1. I-frame Processing (Skipped if Pre-training)
+        if self.extract_rgb:
+            iframes_resized = F.interpolate(iframes, size=(self.crop_size, self.crop_size), mode='bilinear', align_corners=False)
+        else:
+            # Pass a dummy empty tensor so we don't break the return tuple
+            iframes_resized = torch.empty(0) 
 
-        # 2. MV Camera Ego Motion Compensation (Median Subtraction)
-        mvs_flat = mvs.view(N, C_m, T_m, -1)  # [N, 2, 16, H_grid*W_grid]
-        
-        # Calculate median
-        medians, _ = torch.median(mvs_flat, dim=-1, keepdim=True)  # [N, 2, 16, 1]
-        medians = medians.unsqueeze(-1)                            # [N, 2, 16, 1, 1]
-        
-        # Subtract median drone movement
-        mvs_compensated = mvs - medians  # [N, 2, 16, H_grid, W_grid]
+        # 2. MV Camera Ego Motion Compensation
+        mvs_flat = mvs.view(N, C_m, T_m, -1) 
+        medians, _ = torch.median(mvs_flat, dim=-1, keepdim=True)
+        medians = medians.unsqueeze(-1)                            
+        mvs_compensated = mvs - medians
 
         # 3. MV Adaptive Average Pooling (Crush to 14x14)
-        # We pack Batch (N) and Time (T_m) together, but leave Channels (C_m) intact!
-        mvs_packed = mvs_compensated.view(N * T_m, C_m, H_grid, W_grid)  # [128, 2, H_grid, W_grid]
-        
-        # Smoothly pool to 14x14
-        mvs_pooled = F.adaptive_avg_pool2d(mvs_packed, (self.mv_crop_size, self.mv_crop_size))  # [128, 2, 14, 14]
-        
-        # UNPACK back to 5D tensor shape required by VideoMAE
-        mvs_final = mvs_pooled.view(N, C_m, T_m, self.mv_crop_size, self.mv_crop_size)  # [8, 2, 16, 14, 14]
+        mvs_packed = mvs_compensated.view(N * T_m, C_m, H_grid, W_grid)
+        mvs_pooled = F.adaptive_avg_pool2d(mvs_packed, (self.mv_crop_size, self.mv_crop_size)) 
+        mvs_final = mvs_pooled.view(N, C_m, T_m, self.mv_crop_size, self.mv_crop_size)
 
         return iframes_resized, mvs_final
 
-
 class UAVHumanDataset(Dataset):
-    def __init__(self, data_root, split_file, num_segments=8, gop_size=16, is_train=True):
+    def __init__(self, data_root, split_file, num_segments=8, gop_size=16, is_train=True, extract_rgb=True):
         self.data_root = data_root
         self.split_file = split_file
         self.num_segments = num_segments
         self.gop_size = gop_size
+        self.extract_rgb = extract_rgb # Store the switch
         
-        self.cropper = UAVDataTransform(crop_size=224, is_train=is_train)
+        self.cropper = UAVDataTransform(crop_size=224, is_train=is_train, extract_rgb=extract_rgb)
         
         self.mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
         self.std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
@@ -92,13 +80,17 @@ class UAVHumanDataset(Dataset):
         
         try:
             loader = VideoLoader(vid_path, gop_size=self.gop_size)
-            iframes, mvs = loader.get_video_clip(num_segments=self.num_segments)
+            # Pass the switch down to the loader
+            iframes, mvs = loader.get_video_clip(num_segments=self.num_segments, extract_rgb=self.extract_rgb)
             
-            if iframes is None or mvs is None:
-                raise ValueError("VideoLoader returned None (stream unreadable).")
+            if mvs is None or (self.extract_rgb and iframes is None):
+                raise ValueError("VideoLoader returned None.")
 
             iframes, mvs = self.cropper(iframes, mvs)
-            iframes = (iframes - self.mean) / self.std
+            
+            # Skip normalization if we aren't using RGB
+            if self.extract_rgb:
+                iframes = (iframes - self.mean) / self.std
 
             label_tensor = torch.tensor(label, dtype=torch.long)
             return iframes, mvs, label_tensor

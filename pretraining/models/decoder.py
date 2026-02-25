@@ -1,3 +1,4 @@
+#decoder.py
 import torch
 import torch.nn as nn 
 from pretraining.models.encoder import MVMBlock
@@ -16,7 +17,7 @@ class MVMAEDecoder(nn.Module):
         self.norm = nn.LayerNorm(decoder_embed_dim)
         self.pred = nn.Linear(decoder_embed_dim, codebook_size, bias = True)
 
-    def forward(self, x, mask, ids_restore):
+    def forward(self, x, ids_restore):
         x = self.decoder_embed(x)
         
         # fill in the blanks with [MASK] token

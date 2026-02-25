@@ -1,3 +1,4 @@
+#model_wrapper.py
 import torch 
 import torch.nn as nn 
 import torch.nn.functional as F
@@ -8,7 +9,7 @@ class DiscreteMVMAE(nn.Module):
     def __init__(self, codebook_size = 1024):
         super().__init__()
         self.encoder = MVMAEEncoder()
-        self.decoder = MVMAEDecoder(codebook_size)
+        self.decoder = MVMAEDecoder(codebook_size=codebook_size)
 
     def forward(self, x, target_ids, mask_ratio=0.9):
         """
@@ -20,7 +21,7 @@ class DiscreteMVMAE(nn.Module):
         latent, mask, ids_restore = self.encoder(x, mask_ratio)
         
         # decode/predict the masked_tokens
-        logits = self.decoder(latent, mask, ids_restore)
+        logits = self.decoder(latent,ids_restore)
         
         # 2. Calculate CrossEntropy loss
         # we only calculate loss on the masked tokens (mask==1)
