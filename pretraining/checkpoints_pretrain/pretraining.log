@@ -26,3 +26,11 @@
 2026-02-25 23:24:09,938 -        STARTING MVMAE PRE-TRAINING       
 2026-02-25 23:24:09,938 -        Masking Ratio: 90.0% 
 2026-02-25 23:24:09,938 - =========================================
+2026-02-25 23:25:49,835 - Using device: cuda | TF32 Enabled: True
+2026-02-25 23:25:49,835 - Loading Unlabeled Pre-training Dataset...
+2026-02-25 23:25:49,838 - Initializing Discrete MVMAE...
+2026-02-25 23:25:50,349 - Initializing Real Codebook Tokenizer...
+2026-02-25 23:25:50,353 - =========================================
+2026-02-25 23:25:50,354 -        STARTING MVMAE PRE-TRAINING       
+2026-02-25 23:25:50,354 -        Masking Ratio: 90.0% 
+2026-02-25 23:25:50,354 - =========================================
