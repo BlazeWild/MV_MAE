@@ -1,0 +1,174 @@
+2026-02-26 01:14:40,855 - =========================================
+2026-02-26 01:14:40,855 -        STARTING MVMAE PRE-TRAINING       
+2026-02-26 01:14:40,855 -        Masking Ratio: 90.0% 
+2026-02-26 01:14:40,855 - =========================================
+2026-02-26 01:16:25,290 - Using device: cuda | TF32 Enabled: True
+2026-02-26 01:16:25,290 - Loading Unlabeled Pre-training Dataset...
+2026-02-26 01:16:25,574 - Initializing Discrete MVMAE...
+2026-02-26 01:16:25,714 - Initializing Real Codebook Tokenizer...
+2026-02-26 01:16:25,715 - =========================================
+2026-02-26 01:16:25,716 -        STARTING MVMAE PRE-TRAINING       
+2026-02-26 01:16:25,716 -        Masking Ratio: 90.0% 
+2026-02-26 01:16:25,716 - =========================================
+2026-02-26 01:24:15,494 - Using device: cuda | TF32 Enabled: True
+2026-02-26 01:24:15,494 - Loading Unlabeled Pre-training Dataset...
+2026-02-26 01:24:15,786 - Initializing Discrete MVMAE...
+2026-02-26 01:24:15,942 - Initializing Real Codebook Tokenizer...
+2026-02-26 01:24:15,943 - =========================================
+2026-02-26 01:24:15,943 -        STARTING MVMAE PRE-TRAINING       
+2026-02-26 01:24:15,943 -        Masking Ratio: 90.0% 
+2026-02-26 01:24:15,944 - =========================================
+2026-02-26 01:26:14,382 - Using device: cuda | TF32 Enabled: True
+2026-02-26 01:26:14,382 - Loading Unlabeled Pre-training Dataset...
+2026-02-26 01:26:14,663 - Initializing Discrete MVMAE...
+2026-02-26 01:26:14,811 - Initializing Real Codebook Tokenizer...
+2026-02-26 01:26:14,813 - =========================================
+2026-02-26 01:26:14,813 -        STARTING MVMAE PRE-TRAINING       
+2026-02-26 01:26:14,813 -        Masking Ratio: 90.0% 
+2026-02-26 01:26:14,813 - =========================================
+2026-02-26 01:46:31,873 - --- Epoch 1 Summary --- | Avg Loss: 2.7963 | LR: 1.50e-05
+2026-02-26 02:06:16,364 - --- Epoch 2 Summary --- | Avg Loss: 2.2190 | LR: 3.01e-05
+2026-02-26 02:26:08,258 - --- Epoch 3 Summary --- | Avg Loss: 2.1072 | LR: 4.51e-05
+2026-02-26 02:46:01,665 - --- Epoch 4 Summary --- | Avg Loss: 2.0522 | LR: 6.01e-05
+2026-02-26 03:05:41,144 - --- Epoch 5 Summary --- | Avg Loss: 1.9983 | LR: 7.52e-05
+2026-02-26 03:25:16,889 - --- Epoch 6 Summary --- | Avg Loss: 1.9385 | LR: 9.02e-05
+2026-02-26 03:44:55,260 - --- Epoch 7 Summary --- | Avg Loss: 1.8598 | LR: 1.05e-04
+2026-02-26 04:04:29,392 - --- Epoch 8 Summary --- | Avg Loss: 1.7144 | LR: 1.20e-04
+2026-02-26 04:24:01,053 - --- Epoch 9 Summary --- | Avg Loss: 1.6393 | LR: 1.35e-04
+2026-02-26 04:43:35,098 - --- Epoch 10 Summary --- | Avg Loss: 1.6113 | LR: 1.50e-04
+2026-02-26 04:43:35,291 - Checkpoint Saved: C:\hav_video_captioning\MV_MAE\pretraining\checkpoints_pretrain\mvmae_epoch_10.pth
+2026-02-26 05:03:15,790 - --- Epoch 11 Summary --- | Avg Loss: 1.5915 | LR: 1.65e-04
+2026-02-26 05:22:41,839 - --- Epoch 12 Summary --- | Avg Loss: 1.5751 | LR: 1.80e-04
+2026-02-26 05:42:16,897 - --- Epoch 13 Summary --- | Avg Loss: 1.5616 | LR: 1.95e-04
+2026-02-26 06:01:51,746 - --- Epoch 14 Summary --- | Avg Loss: 1.5493 | LR: 2.10e-04
+2026-02-26 06:21:30,059 - --- Epoch 15 Summary --- | Avg Loss: 1.5381 | LR: 2.25e-04
+2026-02-26 06:41:09,756 - --- Epoch 16 Summary --- | Avg Loss: 1.5267 | LR: 2.41e-04
+2026-02-26 07:00:48,501 - --- Epoch 17 Summary --- | Avg Loss: 1.5166 | LR: 2.56e-04
+2026-02-26 07:20:21,236 - --- Epoch 18 Summary --- | Avg Loss: 1.5092 | LR: 2.71e-04
+2026-02-26 07:39:54,544 - --- Epoch 19 Summary --- | Avg Loss: 1.5027 | LR: 2.86e-04
+2026-02-26 07:59:24,912 - --- Epoch 20 Summary --- | Avg Loss: 1.4963 | LR: 3.00e-04
+2026-02-26 07:59:25,105 - Checkpoint Saved: C:\hav_video_captioning\MV_MAE\pretraining\checkpoints_pretrain\mvmae_epoch_20.pth
+2026-02-26 08:19:00,274 - --- Epoch 21 Summary --- | Avg Loss: 1.4890 | LR: 3.00e-04
+2026-02-26 08:38:35,142 - --- Epoch 22 Summary --- | Avg Loss: 1.4829 | LR: 3.00e-04
+2026-02-26 08:58:33,804 - --- Epoch 23 Summary --- | Avg Loss: 1.4761 | LR: 3.00e-04
+2026-02-26 09:18:06,765 - --- Epoch 24 Summary --- | Avg Loss: 1.4701 | LR: 3.00e-04
+2026-02-26 09:37:44,813 - --- Epoch 25 Summary --- | Avg Loss: 1.4649 | LR: 3.00e-04
+2026-02-26 09:57:18,849 - --- Epoch 26 Summary --- | Avg Loss: 1.4600 | LR: 3.00e-04
+2026-02-26 10:16:57,340 - --- Epoch 27 Summary --- | Avg Loss: 1.4546 | LR: 3.00e-04
+2026-02-26 10:36:37,996 - --- Epoch 28 Summary --- | Avg Loss: 1.4507 | LR: 3.00e-04
+2026-02-26 10:56:17,484 - --- Epoch 29 Summary --- | Avg Loss: 1.4468 | LR: 3.00e-04
+2026-02-26 11:15:48,503 - --- Epoch 30 Summary --- | Avg Loss: 1.4429 | LR: 2.99e-04
+2026-02-26 11:15:48,689 - Checkpoint Saved: C:\hav_video_captioning\MV_MAE\pretraining\checkpoints_pretrain\mvmae_epoch_30.pth
+2026-02-26 11:35:27,690 - --- Epoch 31 Summary --- | Avg Loss: 1.4389 | LR: 2.99e-04
+2026-02-26 11:54:59,735 - --- Epoch 32 Summary --- | Avg Loss: 1.4356 | LR: 2.99e-04
+2026-02-26 12:15:12,124 - --- Epoch 33 Summary --- | Avg Loss: 1.4330 | LR: 2.99e-04
+2026-02-26 12:36:49,111 - --- Epoch 34 Summary --- | Avg Loss: 1.4298 | LR: 2.99e-04
+2026-02-26 12:58:28,797 - --- Epoch 35 Summary --- | Avg Loss: 1.4271 | LR: 2.99e-04
+2026-02-26 13:20:12,117 - --- Epoch 36 Summary --- | Avg Loss: 1.4246 | LR: 2.99e-04
+2026-02-26 13:42:00,441 - --- Epoch 37 Summary --- | Avg Loss: 1.4224 | LR: 2.99e-04
+2026-02-26 14:03:43,425 - --- Epoch 38 Summary --- | Avg Loss: 1.4196 | LR: 2.98e-04
+2026-02-26 14:25:23,789 - --- Epoch 39 Summary --- | Avg Loss: 1.4178 | LR: 2.98e-04
+2026-02-26 14:47:06,546 - --- Epoch 40 Summary --- | Avg Loss: 1.4151 | LR: 2.98e-04
+2026-02-26 14:47:06,756 - Checkpoint Saved: C:\hav_video_captioning\MV_MAE\pretraining\checkpoints_pretrain\mvmae_epoch_40.pth
+2026-02-26 15:09:07,731 - --- Epoch 41 Summary --- | Avg Loss: 1.4134 | LR: 2.98e-04
+2026-02-26 15:31:10,135 - --- Epoch 42 Summary --- | Avg Loss: 1.4114 | LR: 2.98e-04
+2026-02-26 15:53:10,040 - --- Epoch 43 Summary --- | Avg Loss: 1.4093 | LR: 2.97e-04
+2026-02-26 16:15:08,666 - --- Epoch 44 Summary --- | Avg Loss: 1.4074 | LR: 2.97e-04
+2026-02-26 16:37:37,508 - --- Epoch 45 Summary --- | Avg Loss: 1.4053 | LR: 2.97e-04
+2026-02-26 17:00:56,241 - --- Epoch 46 Summary --- | Avg Loss: 1.4042 | LR: 2.97e-04
+2026-02-26 17:23:58,857 - --- Epoch 47 Summary --- | Avg Loss: 1.4021 | LR: 2.96e-04
+2026-02-26 17:47:05,902 - --- Epoch 48 Summary --- | Avg Loss: 1.4005 | LR: 2.96e-04
+2026-02-26 18:09:46,376 - --- Epoch 49 Summary --- | Avg Loss: 1.3993 | LR: 2.96e-04
+2026-02-26 18:32:25,765 - --- Epoch 50 Summary --- | Avg Loss: 1.3979 | LR: 2.95e-04
+2026-02-26 18:32:25,965 - Checkpoint Saved: C:\hav_video_captioning\MV_MAE\pretraining\checkpoints_pretrain\mvmae_epoch_50.pth
+2026-02-26 18:55:15,282 - --- Epoch 51 Summary --- | Avg Loss: 1.3962 | LR: 2.95e-04
+2026-02-26 19:18:23,403 - --- Epoch 52 Summary --- | Avg Loss: 1.3949 | LR: 2.95e-04
+2026-02-26 19:42:13,271 - --- Epoch 53 Summary --- | Avg Loss: 1.3937 | LR: 2.94e-04
+2026-02-26 20:06:01,439 - --- Epoch 54 Summary --- | Avg Loss: 1.3925 | LR: 2.94e-04
+2026-02-26 20:29:44,955 - --- Epoch 55 Summary --- | Avg Loss: 1.3911 | LR: 2.94e-04
+2026-02-26 20:53:27,508 - --- Epoch 56 Summary --- | Avg Loss: 1.3898 | LR: 2.93e-04
+2026-02-26 21:17:23,109 - --- Epoch 57 Summary --- | Avg Loss: 1.3888 | LR: 2.93e-04
+2026-02-26 21:41:23,722 - --- Epoch 58 Summary --- | Avg Loss: 1.3874 | LR: 2.93e-04
+2026-02-26 22:04:54,721 - --- Epoch 59 Summary --- | Avg Loss: 1.3867 | LR: 2.92e-04
+2026-02-26 22:28:41,565 - --- Epoch 60 Summary --- | Avg Loss: 1.3853 | LR: 2.92e-04
+2026-02-26 22:28:41,766 - Checkpoint Saved: C:\hav_video_captioning\MV_MAE\pretraining\checkpoints_pretrain\mvmae_epoch_60.pth
+2026-02-26 22:52:22,413 - --- Epoch 61 Summary --- | Avg Loss: 1.3843 | LR: 2.91e-04
+2026-02-26 23:16:12,876 - --- Epoch 62 Summary --- | Avg Loss: 1.3835 | LR: 2.91e-04
+2026-02-26 23:40:05,421 - --- Epoch 63 Summary --- | Avg Loss: 1.3822 | LR: 2.91e-04
+2026-02-27 00:03:46,488 - --- Epoch 64 Summary --- | Avg Loss: 1.3811 | LR: 2.90e-04
+2026-02-27 00:27:20,955 - --- Epoch 65 Summary --- | Avg Loss: 1.3802 | LR: 2.90e-04
+2026-02-27 00:51:04,804 - --- Epoch 66 Summary --- | Avg Loss: 1.3793 | LR: 2.89e-04
+2026-02-27 01:13:27,343 - --- Epoch 67 Summary --- | Avg Loss: 1.3780 | LR: 2.89e-04
+2026-02-27 01:34:15,519 - --- Epoch 68 Summary --- | Avg Loss: 1.3771 | LR: 2.88e-04
+2026-02-27 01:53:56,824 - --- Epoch 69 Summary --- | Avg Loss: 1.3767 | LR: 2.88e-04
+2026-02-27 02:13:42,421 - --- Epoch 70 Summary --- | Avg Loss: 1.3758 | LR: 2.87e-04
+2026-02-27 02:13:42,613 - Checkpoint Saved: C:\hav_video_captioning\MV_MAE\pretraining\checkpoints_pretrain\mvmae_epoch_70.pth
+2026-02-27 02:33:25,217 - --- Epoch 71 Summary --- | Avg Loss: 1.3747 | LR: 2.87e-04
+2026-02-27 02:53:09,992 - --- Epoch 72 Summary --- | Avg Loss: 1.3738 | LR: 2.86e-04
+2026-02-27 03:12:52,702 - --- Epoch 73 Summary --- | Avg Loss: 1.3736 | LR: 2.86e-04
+2026-02-27 03:32:34,769 - --- Epoch 74 Summary --- | Avg Loss: 1.3726 | LR: 2.85e-04
+2026-02-27 03:52:18,407 - --- Epoch 75 Summary --- | Avg Loss: 1.3717 | LR: 2.85e-04
+2026-02-27 04:12:07,078 - --- Epoch 76 Summary --- | Avg Loss: 1.3711 | LR: 2.84e-04
+2026-02-27 04:31:51,237 - --- Epoch 77 Summary --- | Avg Loss: 1.3705 | LR: 2.84e-04
+2026-02-27 04:51:32,662 - --- Epoch 78 Summary --- | Avg Loss: 1.3694 | LR: 2.83e-04
+2026-02-27 05:11:16,959 - --- Epoch 79 Summary --- | Avg Loss: 1.3689 | LR: 2.82e-04
+2026-02-27 05:30:57,621 - --- Epoch 80 Summary --- | Avg Loss: 1.3686 | LR: 2.82e-04
+2026-02-27 05:30:57,836 - Checkpoint Saved: C:\hav_video_captioning\MV_MAE\pretraining\checkpoints_pretrain\mvmae_epoch_80.pth
+2026-02-27 05:50:42,169 - --- Epoch 81 Summary --- | Avg Loss: 1.3678 | LR: 2.81e-04
+2026-02-27 06:10:20,432 - --- Epoch 82 Summary --- | Avg Loss: 1.3669 | LR: 2.81e-04
+2026-02-27 06:29:59,610 - --- Epoch 83 Summary --- | Avg Loss: 1.3662 | LR: 2.80e-04
+2026-02-27 06:49:45,485 - --- Epoch 84 Summary --- | Avg Loss: 1.3656 | LR: 2.79e-04
+2026-02-27 07:09:24,536 - --- Epoch 85 Summary --- | Avg Loss: 1.3649 | LR: 2.79e-04
+2026-02-27 07:29:04,199 - --- Epoch 86 Summary --- | Avg Loss: 1.3643 | LR: 2.78e-04
+2026-02-27 07:48:47,978 - --- Epoch 87 Summary --- | Avg Loss: 1.3634 | LR: 2.78e-04
+2026-02-27 08:08:32,999 - --- Epoch 88 Summary --- | Avg Loss: 1.3630 | LR: 2.77e-04
+2026-02-27 08:28:24,701 - --- Epoch 89 Summary --- | Avg Loss: 1.3625 | LR: 2.76e-04
+2026-02-27 08:48:10,843 - --- Epoch 90 Summary --- | Avg Loss: 1.3617 | LR: 2.76e-04
+2026-02-27 08:48:11,081 - Checkpoint Saved: C:\hav_video_captioning\MV_MAE\pretraining\checkpoints_pretrain\mvmae_epoch_90.pth
+2026-02-27 09:07:59,232 - --- Epoch 91 Summary --- | Avg Loss: 1.3610 | LR: 2.75e-04
+2026-02-27 09:27:44,049 - --- Epoch 92 Summary --- | Avg Loss: 1.3609 | LR: 2.74e-04
+2026-02-27 09:47:28,163 - --- Epoch 93 Summary --- | Avg Loss: 1.3601 | LR: 2.73e-04
+2026-02-27 10:07:11,680 - --- Epoch 94 Summary --- | Avg Loss: 1.3595 | LR: 2.73e-04
+2026-02-27 10:26:52,610 - --- Epoch 95 Summary --- | Avg Loss: 1.3591 | LR: 2.72e-04
+2026-02-27 10:46:40,957 - --- Epoch 96 Summary --- | Avg Loss: 1.3585 | LR: 2.71e-04
+2026-02-27 11:06:24,934 - --- Epoch 97 Summary --- | Avg Loss: 1.3580 | LR: 2.71e-04
+2026-02-27 11:26:08,973 - --- Epoch 98 Summary --- | Avg Loss: 1.3576 | LR: 2.70e-04
+2026-02-27 11:45:53,252 - --- Epoch 99 Summary --- | Avg Loss: 1.3568 | LR: 2.69e-04
+2026-02-27 12:05:35,063 - --- Epoch 100 Summary --- | Avg Loss: 1.3566 | LR: 2.68e-04
+2026-02-27 12:05:35,255 - Checkpoint Saved: C:\hav_video_captioning\MV_MAE\pretraining\checkpoints_pretrain\mvmae_epoch_100.pth
+2026-02-27 12:26:55,954 - --- Epoch 101 Summary --- | Avg Loss: 1.3562 | LR: 2.68e-04
+2026-02-27 12:48:58,451 - --- Epoch 102 Summary --- | Avg Loss: 1.3556 | LR: 2.67e-04
+2026-02-27 13:08:52,444 - --- Epoch 103 Summary --- | Avg Loss: 1.3551 | LR: 2.66e-04
+2026-02-27 13:28:41,350 - --- Epoch 104 Summary --- | Avg Loss: 1.3544 | LR: 2.65e-04
+2026-02-27 13:48:29,795 - --- Epoch 105 Summary --- | Avg Loss: 1.3541 | LR: 2.64e-04
+2026-02-27 14:08:13,785 - --- Epoch 106 Summary --- | Avg Loss: 1.3538 | LR: 2.64e-04
+2026-02-27 14:28:02,804 - --- Epoch 107 Summary --- | Avg Loss: 1.3529 | LR: 2.63e-04
+2026-02-27 14:47:53,508 - --- Epoch 108 Summary --- | Avg Loss: 1.3527 | LR: 2.62e-04
+2026-02-27 15:07:35,860 - --- Epoch 109 Summary --- | Avg Loss: 1.3521 | LR: 2.61e-04
+2026-02-27 15:27:24,870 - --- Epoch 110 Summary --- | Avg Loss: 1.3518 | LR: 2.60e-04
+2026-02-27 15:27:25,080 - Checkpoint Saved: C:\hav_video_captioning\MV_MAE\pretraining\checkpoints_pretrain\mvmae_epoch_110.pth
+2026-02-27 15:47:20,916 - --- Epoch 111 Summary --- | Avg Loss: 1.3517 | LR: 2.59e-04
+2026-02-27 16:07:35,516 - --- Epoch 112 Summary --- | Avg Loss: 1.3509 | LR: 2.59e-04
+2026-02-27 16:27:37,145 - --- Epoch 113 Summary --- | Avg Loss: 1.3507 | LR: 2.58e-04
+2026-02-27 16:47:30,177 - --- Epoch 114 Summary --- | Avg Loss: 1.3502 | LR: 2.57e-04
+2026-02-27 17:07:26,651 - --- Epoch 115 Summary --- | Avg Loss: 1.3498 | LR: 2.56e-04
+2026-02-27 17:27:25,276 - --- Epoch 116 Summary --- | Avg Loss: 1.3494 | LR: 2.55e-04
+2026-02-27 17:47:20,478 - --- Epoch 117 Summary --- | Avg Loss: 1.3488 | LR: 2.54e-04
+2026-02-27 18:07:10,377 - --- Epoch 118 Summary --- | Avg Loss: 1.3486 | LR: 2.53e-04
+2026-02-27 18:27:03,481 - --- Epoch 119 Summary --- | Avg Loss: 1.3483 | LR: 2.52e-04
+2026-02-27 18:46:58,040 - --- Epoch 120 Summary --- | Avg Loss: 1.3475 | LR: 2.52e-04
+2026-02-27 18:46:58,236 - Checkpoint Saved: C:\hav_video_captioning\MV_MAE\pretraining\checkpoints_pretrain\mvmae_epoch_120.pth
+2026-02-27 19:07:05,940 - --- Epoch 121 Summary --- | Avg Loss: 1.3475 | LR: 2.51e-04
+2026-02-27 19:27:06,831 - --- Epoch 122 Summary --- | Avg Loss: 1.3471 | LR: 2.50e-04
+2026-02-27 19:47:04,475 - --- Epoch 123 Summary --- | Avg Loss: 1.3464 | LR: 2.49e-04
+2026-02-27 20:07:01,367 - --- Epoch 124 Summary --- | Avg Loss: 1.3460 | LR: 2.48e-04
+2026-02-27 20:26:56,903 - --- Epoch 125 Summary --- | Avg Loss: 1.3459 | LR: 2.47e-04
+2026-02-27 20:46:50,446 - --- Epoch 126 Summary --- | Avg Loss: 1.3458 | LR: 2.46e-04
+2026-02-27 21:06:49,610 - --- Epoch 127 Summary --- | Avg Loss: 1.3452 | LR: 2.45e-04
+2026-02-27 21:26:49,670 - --- Epoch 128 Summary --- | Avg Loss: 1.3449 | LR: 2.44e-04
+2026-02-27 21:46:51,592 - --- Epoch 129 Summary --- | Avg Loss: 1.3445 | LR: 2.43e-04
+2026-02-27 22:06:45,717 - --- Epoch 130 Summary --- | Avg Loss: 1.3440 | LR: 2.42e-04
+2026-02-27 22:06:45,909 - Checkpoint Saved: C:\hav_video_captioning\MV_MAE\pretraining\checkpoints_pretrain\mvmae_epoch_130.pth
+2026-02-27 22:26:43,809 - --- Epoch 131 Summary --- | Avg Loss: 1.3435 | LR: 2.41e-04
+2026-02-27 22:46:36,981 - --- Epoch 132 Summary --- | Avg Loss: 1.3432 | LR: 2.40e-04
+2026-02-27 23:06:39,811 - --- Epoch 133 Summary --- | Avg Loss: 1.3430 | LR: 2.39e-04

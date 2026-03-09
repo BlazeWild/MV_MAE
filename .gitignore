@@ -54,6 +54,9 @@ model_zoo/clip_context/
 model_zoo/video_mae/
 datasets/UAVHuman_480p_mp4.zip
 tests/*.mp4
+pretraining/checkpoints_pretrain/*.pth
+
+activate_venv.txt
 
 # OS
 .DS_Store

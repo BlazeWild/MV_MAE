@@ -65,7 +65,7 @@ class MVMAEEncoder(nn.Module):
 
         return x_masked, mask, ids_restore
 
-    def forward(self, x, mask_ratio=0.9):
+    def forward(self, x, mask_ratio=0.75):
         # flatten batch and sequence if 6D
         if x.dim() == 6:
             B,S,C,T,H,W = x.shape

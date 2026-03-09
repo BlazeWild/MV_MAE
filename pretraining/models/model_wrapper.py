@@ -11,7 +11,7 @@ class DiscreteMVMAE(nn.Module):
         self.encoder = MVMAEEncoder()
         self.decoder = MVMAEDecoder(codebook_size=codebook_size)
 
-    def forward(self, x, target_ids, mask_ratio=0.9):
+    def forward(self, x, target_ids, mask_ratio=0.75):
         """
         mvs : [B,8,2,16,14,14]
         target_ids: [B*8, 1568] <- Pre-calcuated from VQ-Tokeinizer
@@ -28,7 +28,7 @@ class DiscreteMVMAE(nn.Module):
         if target_ids.dim() == 3: # handle batch if needed
             target_ids = target_ids.view(-1, 1568)
         
-        loss = F.cross_entropy(logits.view(-1, 1024), target_ids.view(-1), reduction = 'none')
+        loss = F.cross_entropy(logits.view(-1, 1024), target_ids.view(-1), reduction = 'none', label_smoothing=0.1)
 
         # only apply_loss where mask==1 
         loss = (loss.view(logits.shape[0], -1) * mask).sum() / mask.sum()

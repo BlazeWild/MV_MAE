@@ -16,7 +16,7 @@ class MVCodebookTokenizer(nn.Module):
         
         # 1. Load the Codebook
         logger.info(f"Loading real MV codebook from: {codebook_path}")
-        codebook_data = torch.load(codebook_path, map_location=device)
+        codebook_data = torch.load(codebook_path, map_location=device, weights_only=True)
         
         if isinstance(codebook_data, dict):
             key = list(codebook_data.keys())[0] 

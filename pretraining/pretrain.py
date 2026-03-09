@@ -40,7 +40,7 @@ class Config:
     num_segments = 8
     gop_size = 16
     codebook_size = 1024
-    mask_ratio = 0.9      # 90% Masking for 2x efficiency
+    mask_ratio = 0.75      # 90% Masking for 2x efficiency
     
     # --- Pre-training Hyperparameters ---
     epochs = 400
@@ -51,10 +51,10 @@ class Config:
     resume = True
     
     # --- Hardware & Cloud Optimization ---
-    batch_size = 4
-    accumulation_steps = 8  # Effective batch size = 32
-    num_workers = 10
-    prefetch_factor = 4
+    batch_size =4
+    accumulation_steps = 8 # Effective batch size = 32
+    num_workers = 16
+    prefetch_factor =2
 
 args = Config()
 
@@ -150,7 +150,13 @@ def main():
     scheduler = WarmupCosineSchedule(optimizer, warmup_steps=warmup_steps, total_steps=total_steps, min_lr=args.min_lr)
 
     start_epoch = 0
-    # Add your load_checkpoint logic here if args.resume is True
+    if args.resume:
+        from pretraining.checkpoint import get_latest_checkpoint, load_checkpoint
+        latest_ckpt = get_latest_checkpoint(args.checkpoint_dir)
+        if latest_ckpt:
+            start_epoch = load_checkpoint(latest_ckpt, model, optimizer, scheduler, logger)
+        else:
+            logger.info("No checkpoint found. Starting from scratch.")
 
     logger.info("=========================================")
     logger.info("       STARTING MVMAE PRE-TRAINING       ")
@@ -202,14 +208,20 @@ def main():
         avg_train_loss = train_loss / len(train_loader)
         logger.info(f"--- Epoch {epoch+1} Summary --- | Avg Loss: {avg_train_loss:.4f} | LR: {current_lr:.2e}")
         
-        # Save Checkpoints
+        # Save State
+        state = {
+            'epoch': epoch + 1,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'scheduler_state_dict': scheduler.state_dict(),
+        }
+        
+        # Always save the latest checkpoint
+        latest_save_path = os.path.join(args.checkpoint_dir, "latest_checkpoint.pth")
+        torch.save(state, latest_save_path)
+        
+        # Save numbered checkpoints every 10 epochs
         if (epoch + 1) % 10 == 0 or (epoch + 1) == args.epochs:
-            state = {
-                'epoch': epoch + 1,
-                'model_state_dict': model.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'scheduler_state_dict': scheduler.state_dict(),
-            }
             save_path = os.path.join(args.checkpoint_dir, f"mvmae_epoch_{epoch+1}.pth")
             torch.save(state, save_path)
             logger.info(f"Checkpoint Saved: {save_path}")
