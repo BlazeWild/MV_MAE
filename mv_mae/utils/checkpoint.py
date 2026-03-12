@@ -75,7 +75,8 @@ def load_checkpoint(ckpt_path, model, optimizer=None, scheduler=None, device="cp
         
     start_epoch = checkpoint.get('epoch', 0)
     best_acc = checkpoint.get('best_acc', 0.0)
+    phase = checkpoint.get('phase', 1)
     
-    logger.info(f"Successfully loaded checkpoint (Resuming from Epoch {start_epoch} | Best Acc: {best_acc:.2f}%)")
+    logger.info(f"Successfully loaded checkpoint (Resuming from Epoch {start_epoch} | Best Acc: {best_acc:.2f}% | Phase: {phase})")
     
-    return start_epoch, best_acc
+    return start_epoch, best_acc, phase
