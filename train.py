@@ -24,10 +24,11 @@ from mv_mae.utils import setup_logger, get_latest_checkpoint, save_checkpoint, l
 # ==============================================================================
 class Config:
     # --- Paths ---
-    data_root = 'datasets/UAVHuman_240p_mp4/Action_Videos'
-    train_split = 'datasets/UAVHuman_240p_mp4/train_split.txt'
-    val_split = 'datasets/UAVHuman_240p_mp4/val_split.txt'
+    data_root = 'datasets/UAVHuman_480p_mp4/Action_Videos'
+    train_split = 'datasets/UAVHuman_480p_mp4/train_split.txt'
+    val_split = 'datasets/UAVHuman_480p_mp4/val_split.txt'
     checkpoint_dir = './checkpoints'
+    pretrain_ckpt_path = 'pretraining/checkpoints_pretrain/dmvmae_272_epoch_pretrain/latest_checkpoint.pth'
     
     # --- Dataset & Architecture ---
     num_classes = 155
@@ -119,7 +120,7 @@ def main():
     )
 
     logger.info("Initializing the MV_MAE model...")
-    model = MVMAE(num_classes=args.num_classes).to(device)
+    model = MVMAE(num_classes=args.num_classes, pretrain_ckpt_path=args.pretrain_ckpt_path).to(device)
     
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)

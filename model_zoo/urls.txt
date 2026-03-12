@@ -1,4 +1,2 @@
-clip_context vit_tiny_patch16_224.pth https://huggingface.co/timm/vit_tiny_patch16_224.augreg_in21k/resolve/main/pytorch_model.bin
-clip_context config.json https://huggingface.co/timm/vit_tiny_patch16_224.augreg_in21k/resolve/main/config.json
-video_mae vit_b_pretrained.pth https://huggingface.co/MCG-NJU/videomae-base-short/resolve/main/pytorch_model.bin
-video_mae config.json https://huggingface.co/MCG-NJU/videomae-base-short/resolve/main/config.json
+clip_context vit_base_patch16_224.pth https://huggingface.co/timm/vit_base_patch16_224.augreg_in21k/resolve/main/pytorch_model.bin
+clip_context config.json https://huggingface.co/timm/vit_base_patch16_224.augreg_in21k/resolve/main/config.json

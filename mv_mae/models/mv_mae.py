@@ -20,11 +20,12 @@ class ClassificationHead(nn.Module):
 
 class MVMAE(nn.Module):
     """MV-MAE Complete Hierarchical Architecture"""
-    def __init__(self, num_classes=155, model_zoo_path="./model_zoo", num_temporal_layers=2, n_head=8, dim_ctx=192, dim_mot=768, max_gops=16):
+    def __init__(self, num_classes=155, model_zoo_path="./model_zoo", pretrain_ckpt_path=None, num_temporal_layers=2, n_head=8, dim_ctx=768, dim_mot=384, max_gops=16):
         super().__init__()
-        # Spatial and motion backbones
+        # Spatial backbone (I-frame encoder)
         self.ctx_encoder = ContextEncoder(model_zoo_path)
-        self.mot_encoder = MotionEncoder(model_zoo_path)
+        # Motion backbone (pretrained MVMAEEncoder)
+        self.mot_encoder = MotionEncoder(pretrain_ckpt_path)
         
         self.max_gops = max_gops
         self.dim_ctx = dim_ctx
